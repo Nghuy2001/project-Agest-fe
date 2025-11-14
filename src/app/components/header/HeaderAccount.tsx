@@ -27,15 +27,15 @@ export const HeaderAccount = () => {
             {/* Đã đăng nhập user */}
             {infoUser && (
               <>
-                <Link href="#" className="">{infoUser.fullName}</Link>
+                <Link href="/user-manage/profile" className="">{infoUser.fullName}</Link>
                 <ul className="absolute top-[100%] right-[0px] w-[200px] bg-[#000065] hidden group-hover/sub-1:block z-[999]">
                   <li className="py-[10px] px-[16px] rounded-[4px] flex items-center justify-between hover:bg-[#000096] relative group/sub-2">
-                    <Link href="" className="text-white font-[600] text-[16px]">
+                    <Link href="/user-manage/profile" className="text-white font-[600] text-[16px]">
                       Thông tin cá nhân
                     </Link>
                   </li>
                   <li className="py-[10px] px-[16px] rounded-[4px] flex items-center justify-between hover:bg-[#000096] relative group/sub-2">
-                    <Link href="" className="text-white font-[600] text-[16px]">
+                    <Link href="/user-manage/cv/list" className="text-white font-[600] text-[16px]">
                       Quản lý CV đã gửi
                     </Link>
                   </li>
