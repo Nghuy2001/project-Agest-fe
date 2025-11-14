@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 export const useAuth = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [infoUser, setInfoUser] = useState<any>();
+  const [infoCompany, setInfoCompany] = useState<any>();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -13,34 +14,36 @@ export const useAuth = () => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check`, {
           credentials: "include",
         });
-        const data = await res.json();
-        if (!res.ok || data.code !== "success") {
+
+        if (!res.ok) {
           setIsLogin(false);
           setInfoUser(null);
+          setInfoCompany(null);
           return;
         }
+        const data = await res.json();
 
         if (data.infoUser) {
           setIsLogin(true);
           setInfoUser(data.infoUser);
-        } else {
-          setIsLogin(false);
-          setInfoUser(null);
+          setInfoCompany(null);
         }
 
-        // if (data.infoCompany) {
-        //   setIsLogin(true);
-        //   setInfoUser(null);
-        // }
+        if (data.infoCompany) {
+          setIsLogin(true);
+          setInfoCompany(data.infoCompany);
+          setInfoUser(null);
+        }
 
       } catch (error) {
         console.error("Auth check failed:", error);
         setIsLogin(false);
         setInfoUser(null);
+        setInfoCompany(null);
       }
     };
 
     checkAuth();
   }, [pathname]);
-  return { isLogin, infoUser };
+  return { isLogin, infoUser, infoCompany };
 }
