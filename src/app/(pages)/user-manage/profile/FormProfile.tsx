@@ -10,6 +10,7 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Toaster, toast } from 'sonner'
+import { useRouter } from "next/navigation";
 
 
 registerPlugin(
@@ -19,11 +20,18 @@ registerPlugin(
 
 
 export const FormProfile = () => {
-  const { infoUser } = useAuth();
+  const { role, infoUser } = useAuth();
   const [avatars, setAvatars] = useState<any[]>([]);
   const [isValid, setIsValid] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
+    if (role === undefined) return;
+    if (role === "employer") {
+      router.push("/");
+    }
+    if (role === null) {
+      router.push("/user/login");
+    }
     if (infoUser) {
       const validator = new JustValidate("#profileForm");
       if (infoUser.avatar) {
@@ -68,14 +76,14 @@ export const FormProfile = () => {
         })
 
     }
-  }, [infoUser]);
+  }, [role, infoUser, router]);
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const fullName = event.target.fullName.value;
     const email = event.target.email.value;
     const phone = event.target.phone.value;
     let avatar = null;
-    if (avatars.length > 0) {
+    if (avatars.length > 0 && avatars[0].file) {
       avatar = avatars[0].file;
     }
     if (isValid) {
@@ -90,14 +98,31 @@ export const FormProfile = () => {
         body: formData,
         credentials: "include",
       })
-        .then(res => res.json())
-        .then(data => {
-          if (data.code == "success") {
-            toast.success(data.message)
+        .then(async (res) => {
+          if (res.status === 401) {
+            router.push("/user/login");
+            return null;
+          }
+
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => null);
+            toast.error(errorData?.message || "Có lỗi xảy ra!");
+            return null;
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (!data) return;
+
+          if (data.code === "success") {
+            toast.success(data.message);
           } else {
-            toast.error(data.message)
+            toast.error(data.message);
           }
         })
+        .catch(() => {
+          toast.error("Không thể kết nối tới server!");
+        });
     }
   }
   return (
@@ -124,8 +149,8 @@ export const FormProfile = () => {
               </label>
               <FilePond
                 name="avatar"
-                allowMultiple={false} // Chỉ chọn 1 ảnh 
-                allowRemove={true} // Cho phép xóa ảnh
+                allowMultiple={false}
+                allowRemove={true}
                 labelIdle='+'
                 acceptedFileTypes={["image/*"]}
                 files={avatars}

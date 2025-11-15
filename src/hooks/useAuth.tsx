@@ -6,6 +6,7 @@ export const useAuth = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [infoUser, setInfoUser] = useState<any>();
   const [infoCompany, setInfoCompany] = useState<any>();
+  const [role, setRole] = useState<any>();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -19,6 +20,7 @@ export const useAuth = () => {
           setIsLogin(false);
           setInfoUser(null);
           setInfoCompany(null);
+          setRole(null);
           return;
         }
         const data = await res.json();
@@ -26,12 +28,14 @@ export const useAuth = () => {
         if (data.infoUser) {
           setIsLogin(true);
           setInfoUser(data.infoUser);
+          setRole("candidate");
           setInfoCompany(null);
         }
 
         if (data.infoCompany) {
           setIsLogin(true);
           setInfoCompany(data.infoCompany);
+          setRole("employer");
           setInfoUser(null);
         }
 
@@ -39,11 +43,12 @@ export const useAuth = () => {
         console.error("Auth check failed:", error);
         setIsLogin(false);
         setInfoUser(null);
+        setRole(null);
         setInfoCompany(null);
       }
     };
 
     checkAuth();
   }, [pathname]);
-  return { isLogin, infoUser, infoCompany };
+  return { isLogin, role, infoUser, infoCompany };
 }

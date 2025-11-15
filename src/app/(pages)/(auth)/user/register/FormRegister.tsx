@@ -3,6 +3,7 @@
 import JustValidate from "just-validate";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast, Toaster } from "sonner";
 
 export const FormRegiter = () => {
   const router = useRouter();
@@ -80,20 +81,28 @@ export const FormRegiter = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataFinal),
+        }).then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            toast.error(err?.message || "Có lỗi xảy ra!");
+            return null;
+          }
+
+          return res.json();
         })
-          .then(res => res.json())
-          .then(data => {
-            if (data.code == "error") {
-              alert(data.message);
-              return;
-            } if (data.code == "success")
-              router.push("/user/login");
+          .then((data) => {
+            if (!data) return;
+            router.push("/user/login");
           })
+          .catch(() => {
+            toast.error("Không thể kết nối đến server!");
+          });
       });
   }, []);
 
   return (
     <>
+      <Toaster position="top-right" expand={false} richColors />
       <form id="registerForm" action="" className="grid grid-cols-1 gap-y-[15px]">
         <div className="">
           <label htmlFor="fullName" className="block font-[500] text-[14px] text-black mb-[5px]">

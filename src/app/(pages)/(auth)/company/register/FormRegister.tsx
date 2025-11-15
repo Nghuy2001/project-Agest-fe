@@ -2,16 +2,19 @@
 "use client"
 import JustValidate from "just-validate";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { toast, Toaster } from "sonner";
 
 export const FormRegister = () => {
   const router = useRouter();
+  const isInitialized = useRef(false);
   useEffect(() => {
     const form = document.querySelector("#registerForm");
     if (!form) return;
 
     const validator = new JustValidate("#registerForm");
-
+    if (isInitialized.current) return;
+    isInitialized.current = true;
     validator
       .addField('#companyName', [
         {
@@ -77,22 +80,28 @@ export const FormRegister = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(dataFinal),
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.code === "error") {
-              alert(data.message);
-            }
+        }).then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            toast.error(err?.message || "Có lỗi xảy ra!");
+            return null;
+          }
 
-            if (data.code === "success") {
-              router.push("/company/login");
-            }
+          return res.json();
+        })
+          .then((data) => {
+            if (!data) return;
+            router.push("/company/login");
           })
+          .catch(() => {
+            toast.error("Không thể kết nối đến server!");
+          });
       });
   }, []);
 
   return (
     <>
+      <Toaster position="top-right" expand={false} richColors />
       <form id="registerForm" action="" className="grid grid-cols-1 gap-y-[15px]">
         <div className="">
           <label htmlFor="companyName" className="block font-[500] text-[14px] text-black mb-[5px]">

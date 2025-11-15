@@ -1,15 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import JustValidate from "just-validate";
 import { useRouter } from "next/navigation";
+import { toast, Toaster } from "sonner";
 
 export const FormLogin = () => {
   const router = useRouter();
-
+  const isInitialized = useRef(false);
   useEffect(() => {
+    if (isInitialized.current) return;
+    isInitialized.current = true;
     const validator = new JustValidate("#loginForm");
-
     validator
       .addField('#email', [
         {
@@ -63,22 +65,28 @@ export const FormLogin = () => {
           },
           body: JSON.stringify(dataFinal),
           credentials: "include",
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.code == "error") {
-              alert(data.message);
-            }
+        }).then(async (res) => {
+          if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            toast.error(err?.message || "Có lỗi xảy ra!");
+            return null;
+          }
 
-            if (data.code == "success") {
-              router.push("/");
-            }
+          return res.json();
+        })
+          .then((data) => {
+            if (!data) return;
+            router.push("/");
           })
+          .catch(() => {
+            toast.error("Không thể kết nối đến server!");
+          });
       });
   }, []);
 
   return (
     <>
+      <Toaster position="top-right" expand={false} richColors />
       <form id="loginForm" action="" className="grid grid-cols-1 gap-y-[15px]">
         <div className="">
           <label htmlFor="email" className="block font-[500] text-[14px] text-black mb-[5px]">
