@@ -13,36 +13,36 @@ export default function CompanyManageJobListPage() {
     <>
       <div className="py-[60px]">
         <div className="container mx-auto px-[16px]">
-          
-        <div className="flex flex-wrap gap-[20px] items-center justify-between mb-[20px]">
-          <h2 className="font-[700] sm:text-[28px] text-[24px] sm:w-auto w-[100%] text-[#121212]">
-            Quản lý công việc
-          </h2>
-          <Link href="#" className="bg-[#0088FF] rounded-[4px] font-[400] text-[14px] text-white inline-block py-[8px] px-[20px]">
-            Thêm mới
-          </Link>
-        </div>
+
+          <div className="flex flex-wrap gap-[20px] items-center justify-between mb-[20px]">
+            <h2 className="font-[700] sm:text-[28px] text-[24px] sm:w-auto w-[100%] text-[#121212]">
+              Quản lý công việc
+            </h2>
+            <Link href="/company-manage/job/create" className="bg-[#0088FF] rounded-[4px] font-[400] text-[14px] text-white inline-block py-[8px] px-[20px]">
+              Thêm mới
+            </Link>
+          </div>
 
           <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
-            <div 
+            <div
               className="border border-[#DEDEDE] rounded-[8px] flex flex-col relative truncate"
               style={{
                 background: "linear-gradient(180deg, #F6F6F6 2.38%, #FFFFFF 70.43%)"
               }}
             >
-              <img 
-                src="/assets/images/card-bg.svg" 
-                alt="" 
-                className="absolute top-[0px] left-[0px] w-[100%] h-auto" 
+              <img
+                src="/assets/images/card-bg.svg"
+                alt=""
+                className="absolute top-[0px] left-[0px] w-[100%] h-auto"
               />
-              <div 
-                className="relative mt-[20px] w-[116px] h-[116px] bg-white mx-auto rounded-[8px] p-[10px]" 
+              <div
+                className="relative mt-[20px] w-[116px] h-[116px] bg-white mx-auto rounded-[8px] p-[10px]"
                 style={{
                   boxShadow: "0px 4px 24px 0px #0000001F"
                 }}
               >
-                <img 
-                  src="/assets/images/demo-cong-ty-1.png" 
+                <img
+                  src="/assets/images/demo-cong-ty-1.png"
                   alt="Frontend Engineer (ReactJS)"
                   className="w-[100%] h-[100%] object-contain"
                 />

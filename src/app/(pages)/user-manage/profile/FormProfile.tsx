@@ -25,13 +25,6 @@ export const FormProfile = () => {
   const [isValid, setIsValid] = useState(false);
   const router = useRouter();
   useEffect(() => {
-    if (role === undefined) return;
-    if (role === "employer") {
-      router.push("/");
-    }
-    if (role === null) {
-      router.push("/user/login");
-    }
     if (infoUser) {
       const validator = new JustValidate("#profileForm");
       if (infoUser.avatar) {
@@ -76,7 +69,7 @@ export const FormProfile = () => {
         })
 
     }
-  }, [role, infoUser, router]);
+  }, [role, infoUser]);
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const fullName = event.target.fullName.value;

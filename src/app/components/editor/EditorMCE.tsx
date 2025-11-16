@@ -3,9 +3,10 @@ import { Editor } from "@tinymce/tinymce-react"
 
 export const EditorMCE = (props: {
   editorRef: any,
-  value?: string
+  value?: string,
+  id?: string
 }) => {
-  const { editorRef, value = "" } = props;
+  const { editorRef, value = "", id = "" } = props;
 
   return (
     <>
@@ -23,6 +24,7 @@ export const EditorMCE = (props: {
           toolbar: `undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help`,
           images_upload_url: `${process.env.NEXT_PUBLIC_API_URL}/upload/image`
         }}
+        id={id}
       />
     </>
   )

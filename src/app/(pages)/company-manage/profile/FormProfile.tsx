@@ -33,13 +33,6 @@ export const FormProfile = () => {
   }, [])
   // console.log(cityList)
   useEffect(() => {
-    if (role === undefined) return;
-    if (role === "candidate") {
-      router.push("/");
-    }
-    if (role === null) {
-      router.push("/company/login");
-    }
     if (infoCompany) {
       const validator = new JustValidate("#profileForm");
       if (infoCompany.logo) {
@@ -79,7 +72,7 @@ export const FormProfile = () => {
         })
 
     }
-  }, [infoCompany, role, router]);
+  }, [infoCompany, role]);
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const companyName = event.target.companyName.value;
@@ -143,8 +136,6 @@ export const FormProfile = () => {
           console.log(error)
           toast.error("Không thể kết nối tới server!");
         });
-
-
     }
   }
   return (
