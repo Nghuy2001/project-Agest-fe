@@ -20,26 +20,52 @@ export const HeaderMenu = (
           link: "#",
           children: [
             {
+              name: "HTML5",
+              link: "/search?language=HTML5",
+              children: null
+            },
+            {
+              name: "CSS3",
+              link: "/search?language=CSS3",
+              children: null
+            },
+            {
+              name: "Javascript",
+              link: "/search?language=Javascript",
+              children: null
+            },
+            {
               name: "ReactJS",
-              link: "#",
+              link: "/search?language=ReactJS",
               children: null
             },
             {
               name: "NodeJS",
-              link: "#",
+              link: "/search?language=NodeJS",
               children: null
             }
           ]
         },
         {
-          name: "Việc làm IT theo công ty",
-          link: "#",
-          children: null
-        },
-        {
           name: "Việc làm IT theo thành phố",
           link: "#",
-          children: null
+          children: [
+            {
+              name: "Hà Nội",
+              link: "/search?city=Hà Nội",
+              children: null
+            },
+            {
+              name: "Đà Nẵng",
+              link: "/search?city=Đà Nẵng",
+              children: null
+            },
+            {
+              name: "Hồ Chí Minh",
+              link: "/search?city=Hồ Chí Minh",
+              children: null
+            },
+          ]
         }
       ]
     },
@@ -49,17 +75,22 @@ export const HeaderMenu = (
       children: [
         {
           name: "FPT Software",
-          link: "#",
+          link: "/search?company=FPT Software",
           children: null
         },
         {
           name: "Techcombank",
-          link: "#",
+          link: "/search?company=Techcombank",
           children: null
         },
         {
           name: "MB Bank",
-          link: "#",
+          link: "/search?company=MB Bank",
+          children: null
+        },
+        {
+          name: "ABC.LTD",
+          link: "/search?company=ABC.LTD",
           children: null
         }
       ]
@@ -83,8 +114,6 @@ export const HeaderMenu = (
     }
   ];
 
-
-
   return (
     <>
       <nav className={"lg:block " + (showMenu ? "fixed top-0 left-0 w-[280px] h-[100vh] z-[999] bg-[#000056]" : "hidden")}>
@@ -92,7 +121,10 @@ export const HeaderMenu = (
           {menuList.map((menu, index) => (
             <li
               key={index}
-              className={"inline-flex lg:w-auto w-full lg:justify-start justify-between p-[10px] items-center gap-x-[8px] relative group/sub-1 flex-wrap " + (menu.isLogin !== undefined && menu.isLogin !== isLogin ? "hidden" : "")}
+              className={
+                "inline-flex lg:w-auto w-full lg:justify-start justify-between p-[10px] items-center gap-x-[8px] relative group/sub-1 flex-wrap " +
+                (menu.isLogin !== undefined && menu.isLogin !== isLogin ? "hidden" : "")
+              }
             >
               <Link
                 href={menu.link}
@@ -121,17 +153,17 @@ export const HeaderMenu = (
                       )}
                       {menuSub1.children && (
                         <ul className="lg:absolute relative top-[0px] lg:left-[100%] left-0 lg:w-[280px] w-full bg-[#000065] hidden group-hover/sub-2:block z-[999]">
-                          {menu.children.map((menuSub2, indexSub2) => (
+                          {menuSub1.children.map((menuSub2, indexSub2) => (
                             <li
                               key={indexSub2}
                               className="py-[10px] px-[16px] rounded-[4px] flex items-center justify-between hover:bg-[#000096]"
                             >
-                              <a
+                              <Link
                                 href={menuSub2.link}
                                 className="text-white font-[600] text-[16px]"
                               >
                                 {menuSub2.name}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
