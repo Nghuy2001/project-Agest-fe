@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { CardCompanyItem } from "@/app/components/card/CardCompanyItem"
+import { CompanyList } from "./CompanyList"
 
 export const metadata: Metadata = {
   title: "Danh sách công ty",
@@ -16,19 +16,7 @@ export default function CompanyListPage() {
             Nhà tuyển dụng hàng đầu
           </h2>
           {/* Wrap */}
-          <div className="grid lg:grid-cols-3 grid-cols-2 sm:gap-[20px] gap-x-[10px] gap-y-[20px]">
-            {/* Item */}
-            <CardCompanyItem />
-          </div>
-
-          <div className="mt-[30px]">
-            <select name="" className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042] outline-none">
-              <option value="">Trang 1</option>
-              <option value="">Trang 2</option>
-              <option value="">Trang 3</option>
-            </select>
-          </div>
-
+          <CompanyList />
         </div>
       </div>
       {/* End Section 2 */}
