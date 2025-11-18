@@ -13,9 +13,15 @@ export const SearchContainer = () => {
   const keyword = searchParams.get('keyword') || '';
   const position = searchParams.get('position') || '';
   const workingForm = searchParams.get("workingForm") || "";
+  const pageParam = searchParams.get("page");
+  const page = pageParam ? parseInt(pageParam) : 1;
   const [jobList, setJobList] = useState<any[]>([]);
+  const [totalPage, setTotalPage] = useState();
+  const [totalRecord, setTotalRecord] = useState();
+
+
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingForm=${workingForm}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingForm=${workingForm}&page=${page}`)
       .then(async (res) => {
         const data = await res.json().catch(() => null);
 
@@ -26,13 +32,15 @@ export const SearchContainer = () => {
 
         if (data?.code === "success") {
           setJobList(data.jobs);
+          setTotalPage(data.totalPage);
+          setTotalRecord(data.totalRecord);
+
         }
       })
       .catch((err) => {
         console.error("Search request failed:", err);
       });
-
-  }, [language, city, company, keyword, position, workingForm]);
+  }, [language, city, company, keyword, position, workingForm, page]);
 
   const handleFilterPosition = (event: any) => {
     const value = event.target.value;
@@ -42,6 +50,7 @@ export const SearchContainer = () => {
     } else {
       params.delete('position');
     }
+    params.delete("page");
     router.push(`?${params.toString()}`);
   }
   const handleFilterWorkingForm = (event: any) => {
@@ -53,17 +62,35 @@ export const SearchContainer = () => {
     } else {
       params.delete("workingForm");
     }
+    params.delete("page");
+    router.push(`?${params.toString()}`);
+  }
+  const handlePagination = (event: any) => {
+    const value = event.target.value;
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value && parseInt(value) > 0) {
+      params.set("page", value);
+    } else {
+      params.delete("page");
+    }
 
     router.push(`?${params.toString()}`);
   }
 
+
   return (
     <>
       <div className="container mx-auto px-[16px]">
+        {totalRecord && (
+          <h2 className="font-[700] text-[28px] text-[#121212] mb-[30px]">
+            {totalRecord} việc làm:
+            <span className="text-[#0088FF] ml-[6px]">
+              {language} {city} {company} {keyword}
+            </span>
+          </h2>
+        )}
 
-        <h2 className="font-[700] text-[28px] text-[#121212] mb-[30px]">
-          {jobList.length} việc làm <span className="text-[#0088FF]">{language} {city} {company} {keyword}</span>
-        </h2>
         <div
           className="bg-white rounded-[8px] py-[10px] px-[20px] mb-[30px] flex flex-wrap gap-[12px]"
           style={{
@@ -75,7 +102,6 @@ export const SearchContainer = () => {
             className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[18px] font-[400] text-[16px] text-[#414042]"
             onChange={handleFilterPosition}
             defaultValue={position}
-
           >
             <option value="">Cấp bậc</option>
             {positionList.map((item, index) => (
@@ -93,7 +119,6 @@ export const SearchContainer = () => {
               <option key={index} value={item.value}>{item.label}</option>
             ))}
           </select>
-
         </div>
 
         <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
@@ -102,13 +127,20 @@ export const SearchContainer = () => {
           ))}
         </div>
 
-        <div className="mt-[30px]">
-          <select name="" className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042] outline-none">
-            <option value="">Trang 1</option>
-            <option value="">Trang 2</option>
-            <option value="">Trang 3</option>
-          </select>
-        </div>
+        {totalPage && (
+          <div className="mt-[30px]">
+            <select
+              name=""
+              className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042]"
+              onChange={handlePagination}
+              defaultValue={page}
+            >
+              {Array(totalPage).fill("").map((item, index) => (
+                <option key={index} value={index + 1}>Trang {index + 1}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
       </div>
     </>
