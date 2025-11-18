@@ -67,7 +67,10 @@ export const FormCreate = () => {
     if (editorRef.current) {
       description = (editorRef.current as any).getContent();
     }
-
+    if (salaryMin > salaryMax) {
+      toast.error("Mức lương tối thiểu không được lớn hơn mức lương tối đa!");
+      return;
+    }
     if (isValid) {
       const formData = new FormData();
       formData.append("title", title);
@@ -79,9 +82,9 @@ export const FormCreate = () => {
       formData.append("description", description);
 
       if (images.length > 0) {
-        for (const image of images) {
-          formData.append("images", image.file);
-        }
+        images.forEach((img) => {
+          if (img.file) formData.append("images", img.file);
+        });
       }
 
       const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/create`, {

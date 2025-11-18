@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 import { useAuth } from "@/hooks/useAuth"
 import JustValidate from "just-validate";
@@ -20,18 +19,21 @@ registerPlugin(
 
 export const FormProfile = () => {
 
-  const { role, infoCompany } = useAuth();
+  const { infoCompany } = useAuth();
   const [logos, setLogos] = useState<any[]>([]);
   const [isValid, setIsValid] = useState(false);
   const [cityList, setCityList] = useState<any[]>([]);
   const router = useRouter();
   const editorRef = useRef(null);
+
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/city/list`).then(res => res.json()).then(data => {
-      setCityList(data.cityList)
-    })
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/city/list`)
+      .then(res => res.json())
+      .then(data => {
+        setCityList(data.cityList)
+      })
   }, [])
-  // console.log(cityList)
+
   useEffect(() => {
     if (infoCompany) {
       const validator = new JustValidate("#profileForm");
@@ -72,7 +74,8 @@ export const FormProfile = () => {
         })
 
     }
-  }, [infoCompany, role]);
+  }, [infoCompany]);
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const companyName = event.target.companyName.value;
@@ -107,7 +110,7 @@ export const FormProfile = () => {
       formData.append("description", description);
       formData.append("logo", logo);
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/profile`, {
+      const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/profile`, {
         method: "PATCH",
         body: formData,
         credentials: "include",
@@ -115,27 +118,29 @@ export const FormProfile = () => {
         .then(async (res) => {
           if (res.status === 401) {
             router.push("/company/login");
-            return null;
+            throw new Error("Please log in again!");
           }
+
+          const data = await res.json().catch(() => null);
           if (!res.ok) {
-            const errorData = await res.json().catch(() => null);
-            toast.error(errorData?.message || "Có lỗi xảy ra!");
-            return null;
+            throw new Error(data?.message || "An unexpected error occurred!");
           }
-          return res.json();
-        })
-        .then((data) => {
-          if (!data) return;
-          if (data.code === "success") {
-            toast.success(data.message);
-          } else {
-            toast.error(data.message);
+          if (data?.code === "error") {
+            throw new Error(data.message);
           }
+
+          return data;
         })
-        .catch((error) => {
-          console.log(error)
-          toast.error("Không thể kết nối tới server!");
+        .catch((err) => {
+          throw new Error(err.message || "Unable to connect to server!");
         });
+
+
+      toast.promise(promise, {
+        loading: "Updating company profile...",
+        success: (data) => data.message || "Profile updated successfully!",
+        error: (err) => err.message || "An error occurred!",
+      });
     }
   }
   return (

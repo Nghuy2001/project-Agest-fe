@@ -27,15 +27,15 @@ export const positionList = [
 
 export const workingFormList = [
   {
-    label: "Tại văn phòng",
-    value: "office"
-  },
-  {
     label: "Làm từ xa",
     value: "remote"
   },
   {
-    label: "Linh hoạt",
-    value: "flexible"
-  }
+    label: "Toàn thời gian",
+    value: " fulltime"
+  },
+  {
+    label: "Bán thời gian",
+    value: "parttime"
+  },
 ];

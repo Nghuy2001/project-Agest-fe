@@ -55,18 +55,16 @@ export const FormEdit = (props: {
           setJobDetail(data.jobDetail);
         }
       });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (jobDetail) {
       if (jobDetail.images && jobDetail.images.length > 0) {
-        const listImage = jobDetail.images.map((image: string) => {
-          return {
-            source: image
-          }
-        })
-
-        setImages(listImage);
+        setImages(
+          jobDetail.images.map((img: string) => ({
+            source: img,
+          }))
+        );
       }
 
       const validator = new JustValidate("#editForm");
@@ -152,7 +150,7 @@ export const FormEdit = (props: {
             throw new Error(data.message);
           }
 
-          event.target.reset();
+          router.push("/company-manage/job/list");
           setImages([]);
 
           return data;

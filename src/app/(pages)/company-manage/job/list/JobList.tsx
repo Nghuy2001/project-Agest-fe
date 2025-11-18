@@ -11,8 +11,7 @@ export const JobList = () => {
   const [jobList, setJobList] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState();
-
-  useEffect(() => {
+  const loadJobs = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list?page=${page}`, {
       method: "GET",
       credentials: "include",
@@ -42,14 +41,24 @@ export const JobList = () => {
       .catch((err) => {
         console.error("[JobList Error]", err.message);
       });
-  }, [page, jobList.length]);
+  }
+  useEffect(() => {
+    loadJobs();
+  }, [page]);
   const handlePagination = (event: any) => {
-    const value = event.target.value;
-    setPage(parseInt(value));
+    setPage(parseInt(event.target.value));
   }
   const handleDeleteSuccess = (id: string) => {
-    setJobList(prev => prev.filter(job => job.id !== id))
-  }
+    setJobList((prev) => {
+      const newList = prev.filter((job) => job.id !== id);
+      if (newList.length === 0 && page > 1) {
+        setPage((prevPage) => prevPage - 1);
+      } else {
+        loadJobs();
+      }
+      return newList;
+    });
+  };
 
   return (
     <>

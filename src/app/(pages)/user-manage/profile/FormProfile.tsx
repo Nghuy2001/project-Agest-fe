@@ -20,7 +20,7 @@ registerPlugin(
 
 
 export const FormProfile = () => {
-  const { role, infoUser } = useAuth();
+  const { infoUser } = useAuth();
   const [avatars, setAvatars] = useState<any[]>([]);
   const [isValid, setIsValid] = useState(false);
   const router = useRouter();
@@ -69,7 +69,7 @@ export const FormProfile = () => {
         })
 
     }
-  }, [role, infoUser]);
+  }, [infoUser]);
   const handleSubmit = (event: any) => {
     event.preventDefault();
     const fullName = event.target.fullName.value;
@@ -86,7 +86,7 @@ export const FormProfile = () => {
       formData.append("phone", phone);
       formData.append("avatar", avatar);
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {
+      const promise = fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/profile`, {
         method: "PATCH",
         body: formData,
         credentials: "include",
@@ -94,28 +94,29 @@ export const FormProfile = () => {
         .then(async (res) => {
           if (res.status === 401) {
             router.push("/user/login");
-            return null;
+            throw new Error("Please log in again!");
           }
 
+          const data = await res.json().catch(() => null);
           if (!res.ok) {
-            const errorData = await res.json().catch(() => null);
-            toast.error(errorData?.message || "Có lỗi xảy ra!");
-            return null;
+            throw new Error(data?.message || "An unexpected error occurred!");
           }
-          return res.json();
-        })
-        .then((data) => {
-          if (!data) return;
+          if (data?.code === "error") {
+            throw new Error(data.message);
+          }
 
-          if (data.code === "success") {
-            toast.success(data.message);
-          } else {
-            toast.error(data.message);
-          }
+          return data;
         })
-        .catch(() => {
-          toast.error("Không thể kết nối tới server!");
+        .catch((err) => {
+          throw new Error(err.message || "Unable to connect to server!");
         });
+
+
+      toast.promise(promise, {
+        loading: "Updating profile...",
+        success: (data) => data.message || "Profile updated successfully!",
+        error: (err) => err.message || "An error occurred!",
+      });
     }
   }
   return (

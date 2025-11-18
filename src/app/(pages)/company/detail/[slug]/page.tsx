@@ -18,9 +18,9 @@ export default function CompanyDetailPage() {
           <div className="border border-[#DEDEDE] rounded-[8px] p-[20px]">
             <div className="flex flex-wrap items-center gap-[16px] mb-[20px]">
               <div className="w-[100px]">
-                <img 
-                  src="/assets/images/demo-cong-ty-2.jpg" 
-                  alt="LG CNS Việt Nam" 
+                <img
+                  src="/assets/images/demo-cong-ty-2.jpg"
+                  alt="LG CNS Việt Nam"
                   className="w-[100%] aspect-square object-cover rounded-[4px]"
                 />
               </div>
@@ -73,7 +73,7 @@ export default function CompanyDetailPage() {
             <h2 className="font-[700] text-[28px] text-[#121212] mb-[20px]">
               Công ty có 6 việc làm
             </h2>
-      
+
             <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
               <CardJobItem />
             </div>
