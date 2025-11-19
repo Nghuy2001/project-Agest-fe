@@ -10,7 +10,7 @@ export const ButtonDelete = (props: {
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
-      "Bạn có chắc muốn xóa công việc: " + item.title + "?"
+      "Bạn có chắc muốn xóa bản ghi: " + (item.title || item.jobTitle) + "?"
     );
 
     if (!confirmDelete) return;

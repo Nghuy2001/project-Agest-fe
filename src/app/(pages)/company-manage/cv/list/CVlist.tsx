@@ -33,6 +33,10 @@ export const CVList = () => {
       console.error("[CVList Error]", err.message);
     });
   }, [])
+  const handleDeleteSuccess = (id: string) => {
+    setListCV(prev => prev.filter(cv => cv.id !== id));
+  };
+
   return (
     <>
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">
@@ -40,7 +44,7 @@ export const CVList = () => {
           item.jobPosition = positionList.find(itemPos => itemPos.value == item.jobPosition)?.label;
           item.jobWorkingForm = workingFormList.find(itemWork => itemWork.value == item.jobWorkingForm)?.label;
           return (
-            <CVItem item={item} key={item.id} />
+            <CVItem item={item} key={item.id} onDeleteSuccess={handleDeleteSuccess} />
           )
         })}
       </div>
