@@ -14,41 +14,17 @@ export const FormLogin = () => {
 
     const validator = new JustValidate("#loginForm");
     validator
-      .addField('#email', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng nhập email của bạn!',
-        },
-        {
-          rule: 'email',
-          errorMessage: 'Email không đúng định dạng!',
-        },
+      .addField("#email", [
+        { rule: "required", errorMessage: "Please enter your email!" },
+        { rule: "email", errorMessage: "Invalid email format!" },
       ])
-      .addField('#password', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng nhập mật khẩu!',
-        },
-        {
-          validator: (value: string) => value.length >= 8,
-          errorMessage: 'Mật khẩu phải chứa ít nhất 8 ký tự!',
-        },
-        {
-          validator: (value: string) => /[A-Z]/.test(value),
-          errorMessage: 'Mật khẩu phải chứa ít nhất một chữ cái in hoa!',
-        },
-        {
-          validator: (value: string) => /[a-z]/.test(value),
-          errorMessage: 'Mật khẩu phải chứa ít nhất một chữ cái thường!',
-        },
-        {
-          validator: (value: string) => /\d/.test(value),
-          errorMessage: 'Mật khẩu phải chứa ít nhất một chữ số!',
-        },
-        {
-          validator: (value: string) => /[@$!%*?&]/.test(value),
-          errorMessage: 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt!',
-        },
+      .addField("#password", [
+        { rule: "required", errorMessage: "Please enter your password!" },
+        { validator: (value: string) => value.length >= 8, errorMessage: "Password must be at least 8 characters!" },
+        { validator: (value: string) => /[A-Z]/.test(value), errorMessage: "Password must contain at least one uppercase letter!" },
+        { validator: (value: string) => /[a-z]/.test(value), errorMessage: "Password must contain at least one lowercase letter!" },
+        { validator: (value: string) => /\d/.test(value), errorMessage: "Password must contain at least one number!" },
+        { validator: (value: string) => /[@$!%*?&]/.test(value), errorMessage: "Password must contain at least one special character!" },
       ])
       .onSuccess((event: any) => {
         const email = event.target.email.value;
@@ -70,7 +46,7 @@ export const FormLogin = () => {
           .then(async (res) => {
             if (!res.ok) {
               const err = await res.json().catch(() => null);
-              toast.error(err?.message || "Có lỗi xảy ra!");
+              toast.error(err?.message || "An error occurred!");
               return null;
             }
 
@@ -81,7 +57,7 @@ export const FormLogin = () => {
             router.push("/");
           })
           .catch(() => {
-            toast.error("Không thể kết nối đến server!");
+            toast.error("Cannot connect to server!");
           });
       });
   }, []);

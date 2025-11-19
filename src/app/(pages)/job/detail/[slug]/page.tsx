@@ -26,7 +26,7 @@ export default async function JobDetailPage({ params }: {
       }
       if (!res.ok) {
         const errorData = await res.json().catch(() => null);
-        throw new Error(errorData?.message || "Có lỗi xảy ra!");
+        throw new Error(errorData?.message || "An error occurred!");
       }
       return res.json();
     }).then((data) => {

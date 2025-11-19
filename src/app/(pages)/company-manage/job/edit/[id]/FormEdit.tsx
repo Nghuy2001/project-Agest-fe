@@ -33,13 +33,13 @@ export const FormEdit = (props: {
     })
       .then(async (res) => {
         if (res.status === 401) {
-          toast.error("Phiên đăng nhập hết hạn!");
+          toast.error("Session expired! Please log in again.");
           window.location.href = "/company/login";
           return null;
         }
         if (!res.ok) {
           const err = await res.json().catch(() => null);
-          toast.error(err?.message || "Có lỗi xảy ra!");
+          toast.error(err?.message || "An error occurred!");
           return null;
         }
         return res.json();
@@ -70,25 +70,12 @@ export const FormEdit = (props: {
       const validator = new JustValidate("#editForm");
 
       validator
-        .addField('#title', [
-          {
-            rule: 'required',
-            errorMessage: 'Vui lòng nhập tên công việc!'
-          },
+        .addField("#title", [{ rule: "required", errorMessage: "Please enter the job title!" }])
+        .addField("#salaryMin", [
+          { rule: "minNumber", value: 0, errorMessage: "Minimum salary must be ≥ 0" },
         ])
-        .addField('#salaryMin', [
-          {
-            rule: 'minNumber',
-            value: 0,
-            errorMessage: 'Vui lòng nhập mức lương >= 0'
-          },
-        ])
-        .addField('#salaryMax', [
-          {
-            rule: 'minNumber',
-            value: 0,
-            errorMessage: 'Vui lòng nhập mức lương >= 0'
-          },
+        .addField("#salaryMax", [
+          { rule: "minNumber", value: 0, errorMessage: "Maximum salary must be ≥ 0" },
         ])
         .onFail(() => {
           setIsValid(false);
@@ -137,13 +124,13 @@ export const FormEdit = (props: {
         .then(async (res) => {
           if (res.status === 401) {
             router.push("/company/login");
-            throw new Error("Vui lòng đăng nhập lại!");
+            throw new Error("Please log in again!");
           }
 
           const data = await res.json().catch(() => null);
 
           if (!res.ok) {
-            throw new Error(data?.message || "Có lỗi xảy ra!");
+            throw new Error(data?.message || "An error occurred!");
           }
 
           if (data?.code === "error") {
@@ -157,9 +144,9 @@ export const FormEdit = (props: {
         });
 
       toast.promise(promise, {
-        loading: 'Đang cập nhật...',
+        loading: 'Updating...',
         success: (data) => `${data.message}`,
-        error: (err) => err.message || 'Đã xảy ra lỗi!',
+        error: (err) => err.message || "An error occurred!",
       });
     }
   }

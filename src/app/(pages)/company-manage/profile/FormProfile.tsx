@@ -48,22 +48,22 @@ export const FormProfile = () => {
         .addField('#companyName', [
           {
             rule: 'required',
-            errorMessage: 'Vui lòng nhập tên công ty!'
+            errorMessage: 'Please enter the company name!'
           },
           {
             rule: 'maxLength',
             value: 200,
-            errorMessage: 'Tên công ty không được vượt quá 200 ký tự!',
+            errorMessage: 'Company name cannot exceed 200 characters!',
           },
         ])
         .addField('#email', [
           {
             rule: 'required',
-            errorMessage: 'Vui lòng nhập email của bạn!',
+            errorMessage: 'Please enter your email!',
           },
           {
             rule: 'email',
-            errorMessage: 'Email không đúng định dạng!',
+            errorMessage: 'Invalid email format!',
           },
         ])
         .onFail(() => {

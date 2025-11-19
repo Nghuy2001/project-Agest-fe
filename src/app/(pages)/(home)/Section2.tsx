@@ -7,7 +7,7 @@ export const Section2 = () => {
   const [companyList, setCompanyList] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/list?limitItems=9`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/list`)
       .then(res => res.json())
       .then(data => {
         if (data.code == "success") {

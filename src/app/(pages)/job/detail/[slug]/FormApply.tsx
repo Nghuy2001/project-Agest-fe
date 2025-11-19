@@ -25,34 +25,34 @@ export const FormApply = (props: {
       .addField('#fullName', [
         {
           rule: 'required',
-          errorMessage: "Vui lòng nhập họ tên!"
+          errorMessage: "Please enter your full name!"
         },
         {
           rule: 'minLength',
           value: 5,
-          errorMessage: "Họ tên phải có ít nhất 5 kí tự!"
+          errorMessage: "Full name must be at least 5 characters!"
         },
         {
           rule: 'maxLength',
           value: 50,
-          errorMessage: "Họ tên không được vượt quá 50 ký tự!"
+          errorMessage: "Full name cannot exceed 50 characters!"
         },
       ])
       .addField('#phone', [
         {
           rule: 'required',
-          errorMessage: 'Vui lòng nhập số điện thoại!'
+          errorMessage: 'Please enter your phone number!'
         },
         {
           rule: 'customRegexp',
           value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
-          errorMessage: 'Số điện thoại không đúng định dạng!'
+          errorMessage: 'Invalid phone number format!'
         },
       ])
       .addField('#fileCV', [
         {
           rule: 'required',
-          errorMessage: 'Vui lòng chọn file CV!',
+          errorMessage: 'Please select a CV file!',
         },
         {
           validator: (value: any, fields: any) => {
@@ -60,7 +60,7 @@ export const FormApply = (props: {
             if (!file) return false;
             return file.type === 'application/pdf';
           },
-          errorMessage: 'File phải là định dạng PDF!',
+          errorMessage: 'File must be in PDF format!',
         },
         {
           validator: (value: any, fields: any) => {
@@ -68,7 +68,7 @@ export const FormApply = (props: {
             if (!file) return false;
             return file.size <= 5 * 1024 * 1024;
           },
-          errorMessage: 'Dung lượng file không được vượt quá 5MB!',
+          errorMessage: 'File size must not exceed 5MB!',
         },
       ]).onSuccess((event: any) => {
         event.preventDefault();

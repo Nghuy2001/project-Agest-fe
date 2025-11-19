@@ -26,25 +26,12 @@ export const FormCreate = () => {
     const validator = new JustValidate("#createForm");
 
     validator
-      .addField('#title', [
-        {
-          rule: 'required',
-          errorMessage: 'Vui lòng nhập tên công việc!'
-        },
+      .addField("#title", [{ rule: "required", errorMessage: "Please enter the job title!" }])
+      .addField("#salaryMin", [
+        { rule: "minNumber", value: 0, errorMessage: "Minimum salary must be ≥ 0" },
       ])
-      .addField('#salaryMin', [
-        {
-          rule: 'minNumber',
-          value: 0,
-          errorMessage: 'Vui lòng nhập mức lương >= 0'
-        },
-      ])
-      .addField('#salaryMax', [
-        {
-          rule: 'minNumber',
-          value: 0,
-          errorMessage: 'Vui lòng nhập mức lương >= 0'
-        },
+      .addField("#salaryMax", [
+        { rule: "minNumber", value: 0, errorMessage: "Maximum salary must be ≥ 0" },
       ])
       .onFail(() => {
         setIsValid(false);
@@ -68,7 +55,7 @@ export const FormCreate = () => {
       description = (editorRef.current as any).getContent();
     }
     if (salaryMin > salaryMax) {
-      toast.error("Mức lương tối thiểu không được lớn hơn mức lương tối đa!");
+      toast.error("Minimum salary cannot be greater than maximum salary!");
       return;
     }
     if (isValid) {
@@ -95,13 +82,13 @@ export const FormCreate = () => {
         .then(async (res) => {
           if (res.status === 401) {
             router.push("/company/login");
-            throw new Error("Vui lòng đăng nhập lại!");
+            throw new Error("Please log in again!");
           }
 
           const data = await res.json().catch(() => null);
 
           if (!res.ok) {
-            throw new Error(data?.message || "Có lỗi xảy ra!");
+            throw new Error(data?.message || "An error occurred!");
           }
 
           if (data?.code === "error") {
@@ -115,9 +102,9 @@ export const FormCreate = () => {
         });
 
       toast.promise(promise, {
-        loading: "Đang tạo mới...",
+        loading: "Creating...",
         success: (data) => `${data.message}`,
-        error: (err) => err.message || "Đã xảy ra lỗi!",
+        error: (err) => err.message || "An error occurred!",
       });
 
     }
