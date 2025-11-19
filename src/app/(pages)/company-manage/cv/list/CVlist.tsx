@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { positionList, workingFormList } from "@/config/variable"
-
 import { useEffect, useState } from "react"
 import { CVItem } from "./CVItem"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export const CVList = () => {
   const [listCV, setListCV] = useState<any[]>([]);
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/cv/list`, {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pageParam = searchParams.get("page");
+  const page = pageParam ? parseInt(pageParam) : 1;
+  const [totalPage, setTotalPage] = useState();
+  const loadJobs = () => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/cv/list?&page=${page}`, {
       method: "GET",
       credentials: "include",
     }).then(async (res) => {
@@ -26,16 +31,33 @@ export const CVList = () => {
 
       if (data.code === "success") {
         setListCV(data.dataFinal);
+        setTotalPage(data.totalPage);
       } else {
         console.error("Lỗi BE:", data.message);
       }
     }).catch((err) => {
       console.error("[CVList Error]", err.message);
     });
-  }, [])
-  const handleDeleteSuccess = (id: string) => {
+  }
+  useEffect(() => {
+    loadJobs();
+  }, [page])
+  const handleDeleteSuccess = async (id: string) => {
     setListCV(prev => prev.filter(cv => cv.id !== id));
+    await loadJobs()
   };
+  const handlePagination = (event: any) => {
+    const value = event.target.value;
+    const params = new URLSearchParams(searchParams.toString());
+
+    if (value && parseInt(value) > 0) {
+      params.set("page", value);
+    } else {
+      params.delete("page");
+    }
+    router.push(`?${params.toString()}`)
+  }
+
 
   return (
     <>
@@ -49,13 +71,20 @@ export const CVList = () => {
         })}
       </div>
 
-      <div className="mt-[30px]">
-        <select name="" className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042]">
-          <option value="">Trang 1</option>
-          <option value="">Trang 2</option>
-          <option value="">Trang 3</option>
-        </select>
-      </div>
+      {totalPage && (
+        <div className="mt-[30px]">
+          <select
+            name=""
+            className="border border-[#DEDEDE] rounded-[8px] py-[12px] px-[18px] font-[400] text-[16px] text-[#414042]"
+            onChange={handlePagination}
+            defaultValue={page}
+          >
+            {Array(totalPage).fill("").map((item, index) => (
+              <option key={index} value={index + 1}>Trang {index + 1}</option>
+            ))}
+          </select>
+        </div>
+      )}
     </>
   )
 }
