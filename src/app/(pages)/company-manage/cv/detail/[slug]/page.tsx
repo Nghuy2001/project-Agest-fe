@@ -29,8 +29,7 @@ export default async function CompanyManageCVDetailPage({ params }: {
     cache: "no-store"
   });
   if (res.status === 401) {
-    if (res.status === 401) redirect('/company/login');
-    return null;
+    return redirect('/company/login');
   }
   if (!res.ok) {
     const errorData = await res.json().catch(() => null);
