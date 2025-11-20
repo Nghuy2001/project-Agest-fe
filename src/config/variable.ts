@@ -43,16 +43,19 @@ export const workingFormList = [
 export const cvStatusList = [
   {
     label: "Chưa duyệt",
+    display: "Đã nộp",
     value: "initial",
     color: "#121212"
   },
   {
     label: "Đã duyệt",
+    display: "Đã duyệt",
     value: "approved",
     color: "#47BE02"
   },
   {
     label: "Từ chối",
+    display: "Từ chối",
     value: "rejected",
     color: "#FF5100"
   }
