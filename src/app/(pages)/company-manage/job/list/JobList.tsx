@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { ButtonDelete } from "@/app/components/button/ButtonDelete";
+import { ButtonDisplay } from "@/app/components/display/ButtonDisplay";
 import { positionList, workingFormList } from "@/config/variable";
 import Link from "next/link"
 import { useEffect, useState } from "react";
@@ -78,7 +79,7 @@ export const JobList = () => {
               <img
                 src="/assets/images/card-bg.svg"
                 alt=""
-                className="absolute top-[0px] left-[0px] w-[100%] h-auto"
+                className="absolute top-[0px] left-[0px] w-[100%] h-auto pointer-events-none"
               />
               <div
                 className="relative mt-[20px] w-[116px] h-[116px] bg-white mx-auto rounded-[8px] p-[10px]"
@@ -120,10 +121,15 @@ export const JobList = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex items-center justify-center gap-[12px] mb-[20px]">
-                <Link href={`/company-manage/job/edit/${item.id}`} className="bg-[#FFB200] rounded-[4px] font-[400] text-[14px] text-black inline-block py-[8px] px-[20px]">
+              <div className="grid grid-flow-col items-center justify-center gap-y-[12px] mb-[20px]">
+                <Link href={`/company-manage/job/edit/${item.id}`} className="bg-[#FFB200] rounded-[4px] font-[400] text-[14px] text-black inline-block py-[8px] px-[20px]  mr-[12px]">
                   Sửa
                 </Link>
+                <ButtonDisplay
+                  api={`${process.env.NEXT_PUBLIC_API_URL}/company/job/change-display/${item.id}`}
+                  item={item}
+                  loadJobs={loadJobs}
+                />
                 <ButtonDelete
                   api={`${process.env.NEXT_PUBLIC_API_URL}/company/job/delete/${item.id}`}
                   item={item}
