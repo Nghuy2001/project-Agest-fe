@@ -58,7 +58,7 @@ export const FormLogin = () => {
           password: password
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/login`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/company/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

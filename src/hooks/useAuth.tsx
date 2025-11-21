@@ -6,7 +6,6 @@ export const useAuth = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [infoUser, setInfoUser] = useState<any>();
   const [infoCompany, setInfoCompany] = useState<any>();
-  const [role, setRole] = useState<any>();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -15,12 +14,10 @@ export const useAuth = () => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check`, {
           credentials: "include",
         });
-
         if (!res.ok) {
           setIsLogin(false);
           setInfoUser(null);
           setInfoCompany(null);
-          setRole(null);
           return;
         }
         const data = await res.json();
@@ -28,27 +25,26 @@ export const useAuth = () => {
         if (data.infoUser) {
           setIsLogin(true);
           setInfoUser(data.infoUser);
-          setRole("candidate");
           setInfoCompany(null);
-        }
-
-        if (data.infoCompany) {
+        } else if (data.infoCompany) {
           setIsLogin(true);
           setInfoCompany(data.infoCompany);
-          setRole("employer");
           setInfoUser(null);
+        } else {
+          setIsLogin(false);
+          setInfoUser(null);
+          setInfoCompany(null);
         }
 
       } catch (error) {
         console.error("Auth check failed:", error);
         setIsLogin(false);
         setInfoUser(null);
-        setRole(null);
         setInfoCompany(null);
       }
     };
 
     checkAuth();
   }, [pathname]);
-  return { isLogin, role, infoUser, infoCompany };
+  return { isLogin, infoUser, infoCompany, setIsLogin, setInfoUser, setInfoCompany };
 }

@@ -92,7 +92,7 @@ export const FormApply = (props: {
         })
           .then(async (res) => {
             const data = await res.json().catch(() => null);
-            if (res.status === 401) {
+            if (res.status === 401 || res.status === 403) {
               router.push("/user/login");
               throw new Error("Please log in again!");
             }

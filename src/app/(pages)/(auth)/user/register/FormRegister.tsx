@@ -40,7 +40,7 @@ export const FormRegiter = () => {
           password: password
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

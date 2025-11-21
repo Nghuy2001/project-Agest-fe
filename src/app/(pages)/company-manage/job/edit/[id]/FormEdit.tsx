@@ -32,7 +32,7 @@ export const FormEdit = (props: {
       credentials: "include"
     })
       .then(async (res) => {
-        if (res.status === 401) {
+        if (res.status === 401 || res.status === 403) {
           toast.error("Session expired! Please log in again.");
           window.location.href = "/company/login";
           return null;

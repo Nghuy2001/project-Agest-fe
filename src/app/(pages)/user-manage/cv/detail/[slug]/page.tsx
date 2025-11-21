@@ -24,7 +24,7 @@ export default async function UserManageCVDetailPage({ params }: {
     },
     cache: "no-cache"
   });
-  if (res.status === 401) {
+  if (res.status === 401 || res.status === 403) {
     return redirect('/user/login')
   }
   if (!res.ok) {
