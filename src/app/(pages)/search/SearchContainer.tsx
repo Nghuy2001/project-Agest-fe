@@ -15,13 +15,17 @@ export const SearchContainer = () => {
   const workingForm = searchParams.get("workingForm") || "";
   const pageParam = searchParams.get("page");
   const page = pageParam ? parseInt(pageParam) : 1;
+  const salaryMinParam = searchParams.get("salaryMin");
+  const salaryMin = salaryMinParam ? parseInt(salaryMinParam) : 0;
+  const salaryMaxParam = searchParams.get("salaryMax");
+  const salaryMax = salaryMaxParam ? parseInt(salaryMaxParam) : 0;
   const [jobList, setJobList] = useState<any[]>([]);
   const [totalPage, setTotalPage] = useState();
   const [totalRecord, setTotalRecord] = useState();
 
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingForm=${workingForm}&page=${page}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/search?language=${language}&city=${city}&company=${company}&keyword=${keyword}&position=${position}&workingForm=${workingForm}&page=${page}&salaryMin=${salaryMin}&salaryMax=${salaryMax}`)
       .then(async (res) => {
         const data = await res.json().catch(() => null);
 
@@ -40,7 +44,7 @@ export const SearchContainer = () => {
       .catch((err) => {
         console.error("Search request failed:", err);
       });
-  }, [language, city, company, keyword, position, workingForm, page]);
+  }, [language, city, company, keyword, position, workingForm, page, salaryMin, salaryMax]);
 
   const handleFilterPosition = (event: any) => {
     const value = event.target.value;
@@ -77,7 +81,28 @@ export const SearchContainer = () => {
 
     router.push(`?${params.toString()}`);
   }
+  const handleSalaryMin = (event: any) => {
+    const value = event.target.value;
+    const params = new URLSearchParams(searchParams.toString())
+    if (value && parseInt(value) > 0) {
+      params.set("salaryMin", value);
+    } else {
+      params.delete("salaryMin");
+    }
 
+    router.push(`?${params.toString()}`);
+  }
+  const handleSalaryMax = (event: any) => {
+    const value = event.target.value;
+    const params = new URLSearchParams(searchParams.toString())
+    if (value && parseInt(value) > 0) {
+      params.set("salaryMax", value);
+    } else {
+      params.delete("salaryMax");
+    }
+
+    router.push(`?${params.toString()}`);
+  }
 
   return (
     <>
@@ -119,6 +144,8 @@ export const SearchContainer = () => {
               <option key={index} value={item.value}>{item.label}</option>
             ))}
           </select>
+          <input className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[22px] font-[400] text-[16px] text-[#414042]" type="number" placeholder="Mức lương tối thiểu ($)" onChange={handleSalaryMin} />
+          <input className="border border-[#DEDEDE] rounded-[20px] h-[36px] px-[22px] font-[400] text-[16px] text-[#414042]" type="number" placeholder="Mức lương tối đa ($)" onChange={handleSalaryMax} />
         </div>
 
         <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[20px]">

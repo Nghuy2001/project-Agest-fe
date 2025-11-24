@@ -3,7 +3,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation";
 
 export const HeaderAccount = () => {
-  const { isLogin, infoUser, infoCompany } = useAuth();
+  const { isLogin, infoUser, infoCompany, setIsLogin, setInfoUser, setInfoCompany } = useAuth();
   const router = useRouter();
 
   const handleLogout = async (linkRedirect: string) => {
@@ -13,8 +13,10 @@ export const HeaderAccount = () => {
     });
 
     const data = await res.json();
-
     if (data.code === "success") {
+      setIsLogin(false);
+      setInfoUser(null);
+      setInfoCompany(null);
       router.push(linkRedirect);
     }
   };

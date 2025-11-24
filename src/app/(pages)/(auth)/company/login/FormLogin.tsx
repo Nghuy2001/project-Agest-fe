@@ -1,9 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useEffect, useRef } from "react";
 import JustValidate from "just-validate";
 import { useRouter } from "next/navigation";
 import { toast, Toaster } from "sonner";
+import { redirectToGoogleLogin } from "@/utils/auth";
 
 export const FormLogin = () => {
   const router = useRouter();
@@ -58,7 +60,7 @@ export const FormLogin = () => {
           password: password
         };
 
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/login`, {
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/company/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -83,7 +85,6 @@ export const FormLogin = () => {
           });
       });
   }, []);
-
   return (
     <>
       <Toaster position="top-right" expand={false} richColors />
@@ -111,8 +112,21 @@ export const FormLogin = () => {
           />
         </div>
         <div className="">
-          <button className="bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white">
+          <button className="bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white mb-[10px]">
             Đăng nhập
+          </button>
+          <button
+            type="button"
+            onClick={() => redirectToGoogleLogin('employer')}
+            className="flex items-center justify-center gap-2 border border-[#DEDEDE] rounded-[4px] 
+             w-full h-[48px] font-[600] text-[16px] text-black hover:bg-gray-100 transition"
+          >
+            <img
+              src="/assets/images/google-icon.png"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            <span className="font-[500] text-[16px]">Đăng nhập với Google</span>
           </button>
         </div>
       </form>

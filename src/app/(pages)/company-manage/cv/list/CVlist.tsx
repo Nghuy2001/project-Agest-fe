@@ -11,40 +11,50 @@ export const CVList = () => {
   const searchParams = useSearchParams();
   const pageParam = searchParams.get("page");
   const page = pageParam ? parseInt(pageParam) : 1;
-  const [totalPage, setTotalPage] = useState();
-  const loadJobs = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/cv/list?&page=${page}`, {
-      method: "GET",
-      credentials: "include",
-    }).then(async (res) => {
-      if (res.status === 401) {
-        window.location.href = '/company/login'
-        return null;
-      }
+  const [totalPage, setTotalPage] = useState<number>(0);
+  const loadCV = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/cv/list?page=${page}`, {
+        method: "GET",
+        credentials: "include",
+      });
+
       if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          router.push("/company/login");
+          return;
+        }
         const errorData = await res.json().catch(() => null);
-        throw new Error(errorData?.message || "An error occurred!");
+        console.error("Fetch CVList failed:", errorData?.message || "Unknown error");
+        setListCV([]);
+        setTotalPage(0);
+        return;
       }
-      return res.json();
-    }).then((data) => {
-      if (!data) return;
+
+      const data = await res.json();
 
       if (data.code === "success") {
         setListCV(data.dataFinal);
         setTotalPage(data.totalPage);
       } else {
-        console.error("Lỗi BE:", data.message);
+        console.error("BE error:", data.message);
+        setListCV([]);
+        setTotalPage(0);
       }
-    }).catch((err) => {
+
+    } catch (err: any) {
       console.error("[CVList Error]", err.message);
-    });
-  }
+      setListCV([]);
+      setTotalPage(0);
+    }
+  };
+
   useEffect(() => {
-    loadJobs();
+    loadCV();
   }, [page])
   const handleDeleteSuccess = async (id: string) => {
     setListCV(prev => prev.filter(cv => cv.id !== id));
-    await loadJobs()
+    await loadCV();
   };
   const handlePagination = (event: any) => {
     const value = event.target.value;

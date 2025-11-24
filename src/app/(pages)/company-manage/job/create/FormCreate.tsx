@@ -80,7 +80,7 @@ export const FormCreate = () => {
         credentials: "include",
       })
         .then(async (res) => {
-          if (res.status === 401) {
+          if (res.status === 401 || res.status === 403) {
             router.push("/company/login");
             throw new Error("Please log in again!");
           }

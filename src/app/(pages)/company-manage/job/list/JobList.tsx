@@ -11,38 +11,39 @@ export const JobList = () => {
 
   const [jobList, setJobList] = useState<any[]>([]);
   const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState();
-  const loadJobs = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list?page=${page}`, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then(async (res) => {
-        if (res.status === 401) {
-          window.location.href = "/company/login";
-          return null;
-        }
-
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => null);
-          throw new Error(errorData?.message || "An error occurred!");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (!data) return;
-
-        if (data.code === "success") {
-          setJobList(data.dataFinal);
-          setTotalPage(data.totalPage);
-        } else {
-          console.error("Lỗi BE:", data.message);
-        }
-      })
-      .catch((err) => {
-        console.error("[JobList Error]", err.message);
+  const [totalPage, setTotalPage] = useState<number>();
+  const loadJobs = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/company/job/list?page=${page}`, {
+        method: "GET",
+        credentials: "include",
       });
-  }
+
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = "/company/login";
+          return;
+        }
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.message || "An error occurred!");
+      }
+
+      const data = await res.json();
+
+      if (data.code === "success") {
+        setJobList(data.dataFinal);
+        setTotalPage(data.totalPage);
+      } else {
+        console.error("Lỗi BE:", data.message);
+        setJobList([]);
+        setTotalPage(0);
+      }
+    } catch (err: any) {
+      console.error("[JobList Error]", err.message);
+      setJobList([]);
+      setTotalPage(0);
+    }
+  };
   useEffect(() => {
     loadJobs();
   }, [page]);
