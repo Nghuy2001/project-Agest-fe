@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
+import { redirectToGoogleLogin } from "@/utils/auth";
 import JustValidate from "just-validate";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -103,8 +104,21 @@ export const FormRegiter = () => {
           />
         </div>
         <div className="">
-          <button className="bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white">
+          <button className="bg-[#0088FF] rounded-[4px] w-[100%] h-[48px] px-[20px] font-[700] text-[16px] text-white mb-[10px]">
             Đăng ký
+          </button>
+          <button
+            type="button"
+            onClick={() => redirectToGoogleLogin("candidate")}
+            className="flex items-center justify-center gap-2 border border-[#DEDEDE] rounded-[4px] 
+                       w-full h-[48px] font-[600] text-[16px] text-black hover:bg-gray-100 transition"
+          >
+            <img
+              src="/assets/images/google-icon.png"
+              alt="Google"
+              className="w-5 h-5"
+            />
+            <span className="font-[500] text-[16px]">Đăng nhập với Google</span>
           </button>
         </div>
       </form>
